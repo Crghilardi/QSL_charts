@@ -1,3 +1,6 @@
+library(ggplot2)
+library(scales)
+
 SDI.plot=function(tpa=10, qmd=2,maxSDI=230,group="",color="",type="p",tpa_range=c(1,1200),
 dia_range=c(1,40),rdi_lines=c(35,55),units="imperial",psize=1,lsize=1){
 
@@ -50,7 +53,7 @@ geom_abline(intercept=maxSDI_intercept(maxSDI),slope=-0.623053,color="red",size=
   scale_x_continuous(trans=log_trans(),breaks=base_breaksx(),limits=c(tpa_range[1],(tpa_range[2]+tpa_range[2]*0.10)))+
 scale_y_continuous(trans=log_trans(),breaks=base_breaksy(),limits=c(dia_range[1],(dia_range[2]+dia_range[2]*0.10)))+
 theme_bw()+
-labs(x="Tree/Acre",y="QMD",title=main_text,subtitle=sub_text)
+labs(x="Tree/Acre",y="QMD",title=main_text,subtitle=sub_text)+theme(legend.position = "none") #remove legend, needed to add this when running large lists of stands
 
 
 #spit out finished plot
@@ -68,10 +71,20 @@ testing_stand=data.frame(Stand=c(101,101,101,101,101,101,101,102,102,102,102,102
     1.9,2.9,3.4,4.4,5.8,7.2,9.3)
   )
 
-#testing_stand=testing_stand[testing_stand$Stand=="101",]
+testing_stand=testing_stand[testing_stand$Stand=="101",]
 
 testing_stand$Stand=as.factor(testing_stand$Stand)
 testing_stand$Year=as.factor(testing_stand$Year)
 
 
-SDI.plot(tpa=testing_stand$TPA,qmd=testing_stand$QMD,type="b",group=testing_stand$Stand,color=testing_stand$Stand,psize=4,lsize=4)
+SDI.plot(tpa=testing_stand$TPA,qmd=testing_stand$QMD,type="l",
+         group=testing_stand$Stand,
+         color=testing_stand$Stand,
+         psize=2,
+         lsize=2,
+         maxSDI = 570,
+         rdi=c(15,45))
+
+SDI.plot(qmd=c(2),tpa=c(5),type="p")
+
+
