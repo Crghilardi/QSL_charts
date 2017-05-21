@@ -1,26 +1,29 @@
 #Written by: Casey Ghilardi
 #Github: crghilardi
-#Stocking chart
+#Gingrich stocking chart
 
 using Gadfly
+using DataFrames
 
 a =[-0.0507, 0.1698, 0.0317]
 b =[0.0175, 0.205, 0.06]
 
-ba_ticks=collect(0:20:160) # how to do seq() in Julia. (start:by:end)
+ba_ticks=collect(0:20:160)
 tpa_ticks=collect(0:50:450)
 
 #QMD
 dia = [7, 8, 10, 12, 14, 16, 18, 20, 22]
 #stocking percent horizontal lines
 stk_percent=collect(20:10:110)
+
 function amd_convert(qmd)
   amd=-0.259+0.973*qmd
 end
-amd_convert(7)
+
+#test - should return 6.552
+#amd_convert(7)
 
 #function to draw stocking lines...needs work
-using DataFrames
 function make_stklines(stk,dia)
   BA=Float64[]
   TPA=Float64[]
@@ -40,7 +43,6 @@ end
 df2=make_stklines(stk_percent,dia)
 
 #function to draw QMD lines
-using DataFrames
 function make_lines(qmd)
   BA=Float64[]
   TPA=Float64[]
@@ -97,5 +99,6 @@ layer(df2,x=:TPA,y=:BA,color=:STK,Geom.line),
     Guide.yticks(ticks=ba_ticks),
     Guide.xticks(ticks=tpa_ticks),
     Guide.xlabel("Trees per acre"),
-    Guide.ylabel("Basal Area (sq. ft./acre)")
+    Guide.ylabel("Basal Area (sq. ft./acre)",orientation=:vertical),
+    Theme(key_position = :none) # remove legend
     )
